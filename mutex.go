@@ -3,10 +3,10 @@ package redsync
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/hashicorp/go-multierror"
 )
 
 // A DelayFunc is used to decide the amount of time to wait between retries.
@@ -181,7 +181,7 @@ func (m *Mutex) actOnPoolsAsync(actFn func(Pool) (bool, error)) (int, error) {
 		if r.Status {
 			n++
 		} else if r.Err != nil {
-			err = multierror.Append(err, r.Err)
+			err = fmt.Errorf("%v\n%v", err, r.Err)
 		}
 	}
 	return n, err
